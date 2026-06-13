@@ -6,9 +6,13 @@ services:
     dockerfilePath: ./Dockerfile
     healthCheckPath: /
     envVars:
-      - key: api-key
+      - key: XAI_API_KEY
         sync: false
-      - key: cf-account-id
+      - key: XAI_MODEL
+        value: grok-4.3
+      - key: CLOUDFLARE_ACCOUNT_ID
         sync: false
+      - key: CLOUDFLARE_GATEWAY_ID
+        value: default
     autoDeploy: true
     plan: free

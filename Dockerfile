@@ -1,16 +1,19 @@
-# Use a lightweight PHP image
 FROM php:8.2-alpine
 
-# Set working directory
+RUN apk add --no-cache libcurl \
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS curl-dev \
+    && docker-php-ext-install curl \
+    && apk del .build-deps
+
 WORKDIR /var/www/html
 
-# Copy PHP files
-COPY index.php .
-COPY Parsedown.php .
-COPY parsedown.css .
+COPY index.php Parsedown.php parsedown.css ./
 
-# Expose port 8000 for Render
+RUN printf '%s\n' \
+    'upload_max_filesize=20M' \
+    'post_max_size=21M' \
+    > /usr/local/etc/php/conf.d/uploads.ini
+
 EXPOSE 8000
 
-# Start the built-in PHP server
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "/var/www/html"]
