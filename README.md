@@ -1,6 +1,6 @@
 # Grok PHP
 
-A simple one-file PHP wrapper for the Grok API.
+A small PHP chat interface for the xAI API, with optional Cloudflare AI Gateway routing.
 
 ## Screenshot
 
@@ -8,57 +8,73 @@ A simple one-file PHP wrapper for the Grok API.
 
 ## Features
 
-- Single-file PHP implementation for Grok AI
-- Support for both text and image inputs
-- Cloudflare AI Gateway integration
+- Text and JPEG/PNG image inputs
 - Session-based chat history
+- Markdown rendering with raw HTML disabled
+- Direct xAI API access or optional Cloudflare AI Gateway routing
 - Mobile-friendly responsive design
-- Image upload and preview functionality
+- Docker and Render deployment support
 
 ## Requirements
 
 - PHP 8.0 or higher
-- cURL extension enabled
-- Valid Grok API key
+- PHP cURL, Fileinfo, and Session extensions
+- A valid [xAI API key](https://console.x.ai/)
 
-## Setup
+## Local setup
 
-1. Clone this repository:
+1. Clone this repository and enter it:
+
    ```bash
-   git clone https://github.com/yourusername/grok-php.git
-   cd grok-php
+   git clone https://github.com/365cent/grok-chat.git
+   cd grok-chat
    ```
 
-2. Create a `.env` file with your API credentials:
-   ```
-   api-key=your-grok-api-key
-   cf-account-id=your-cloudflare-account-id
+2. Create `.env` with your xAI API key:
+
+   ```ini
+   XAI_API_KEY=your-xai-api-key
+   XAI_MODEL=grok-4.3
    ```
 
-3. Start the PHP dev server:
+3. Start the development server:
+
    ```bash
    php -S localhost:8000
    ```
 
-4. Open your browser and navigate to `http://localhost:8000`
+4. Open <http://localhost:8000>.
 
-## Render Deployment
+The app calls xAI directly when only `XAI_API_KEY` is configured.
+
+## Optional Cloudflare AI Gateway
+
+To route requests through an existing [Cloudflare AI Gateway](https://developers.cloudflare.com/ai-gateway/providers/grok/), add these values:
+
+```ini
+CLOUDFLARE_ACCOUNT_ID=your-cloudflare-account-id
+CLOUDFLARE_GATEWAY_ID=ai
+```
+
+Set `CLOUDFLARE_GATEWAY_ID` to the gateway name shown in Cloudflare. It defaults to `ai` to remain compatible with this project's original deployment URL. The legacy variable names `api-key`, `cf-account-id`, and `cf-gateway-id` remain supported for existing deployments.
+
+## Docker
+
+```bash
+docker build -t grok-chat .
+docker run --rm -p 8000:8000 -e XAI_API_KEY=your-xai-api-key grok-chat
+```
+
+Then open <http://localhost:8000>.
+
+## Render deployment
+
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/365cent/grok-chat)
 
-Get your Grok API key from [here](https://console.x.ai)
-
-Create a new [AI Gateway](https://developers.cloudflare.com/ai-gateway/get-started/) on Cloudflare (for free) and get the account id from [here](https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/)
-
-Fill in the API key as `api-key` and the account id as `cf-account-id` in render environment variables
-
-Deploy the app
-
-Open the app and start chatting!
-
-**This app can be deployed 0.1vCPU 0.1GB RAM instance for free on Render**
+Set `XAI_API_KEY` when prompted. Cloudflare values are optional; leave `CLOUDFLARE_ACCOUNT_ID` empty to call xAI directly.
 
 ## Thanks
 
-- [Grok API](https://x.ai)
+- [xAI API](https://x.ai/)
 - [Cloudflare AI Gateway](https://developers.cloudflare.com/ai-gateway/)
-- [Render](https://render.com)
+- [Render](https://render.com/)
